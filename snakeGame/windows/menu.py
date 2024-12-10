@@ -25,11 +25,18 @@ class Menu(Window):
         y = self.center[1] - height
         play_button = RoundedButton(x, y, width, height, "Play",
                                     50, (0, 0, 0), (0, 255, 0),
-                                    (0, 190, 0), border_width=5,
+                                    (0, 190, 0), border_width=10,
                                     corner_radius=30, on_click=on_play_click)
 
         self.add_entity(play_button)
 
     def load(self, on_play_click: callable):
+        print("Loading menu")
         self.title()
         self.buttons(on_play_click)
+        print("Entities loaded: ", self._entities)
+
+    def unload(self):
+        print("Unloading menu")
+        self.clear_entities()
+

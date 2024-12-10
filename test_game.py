@@ -1,5 +1,5 @@
+# from tictactoe.tictactoe import TicTacToe
 from snakeGame.snakeGame import SnakeGame
-
 
 def main():
     game = SnakeGame()

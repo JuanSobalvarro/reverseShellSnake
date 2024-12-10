@@ -1,5 +1,7 @@
 import pygame as pg
 
+from snakeGame.widgets.entity import Entity
+
 
 class Window:
     def __init__(self, screen_width: int, screen_height: int):
@@ -9,7 +11,7 @@ class Window:
 
         self.center = (self.screen_width / 2, self.screen_height / 2)
 
-        self._entities = []
+        self._entities: list[Entity] = []
 
     # This method SHOULD be overridden by subclasses
     def load(self):
@@ -17,7 +19,7 @@ class Window:
 
     # Override this method if you need to clear different things than entities
     def unload(self):
-        self._entities.clear()
+        self.clear_entities()
 
     def add_entity(self, entity):
         self._entities.append(entity)
@@ -27,3 +29,13 @@ class Window:
 
     def get_entities(self):
         return self._entities
+
+    def handle_event(self, event: pg.event.Event):
+        """
+        Handle events for all entities in the window
+        :param event:
+        :return:
+        """
+        for entity in self._entities:
+            # print("Handling event for entity: ", entity)
+            entity.handle_event(event)

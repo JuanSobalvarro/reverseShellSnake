@@ -5,6 +5,7 @@ import time
 import pygame as pg
 
 from snakeGame.widgets.entity import Entity
+from snakeGame.windows.window import Window
 
 
 class Game:
@@ -21,9 +22,13 @@ class Game:
         self._last_fps_update = time.time()
         self.fps = 0
 
-        self._entities: Entity = []
+        self.mouse_pos: bool = False
 
-    def run(self, fps: int):
+        self.current_screen: Window = None
+
+        self._entities: list[Entity] = []
+
+    def run(self, fps: int = inf):
         self.running = True
         asyncio.run(self._main_loop(fps))
 
@@ -39,13 +44,19 @@ class Game:
         self._entities.clear()
 
     async def events(self):
-
+        # print("Handling events for screen: ", self.current_screen)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
-            for entity in self._entities:
-                if hasattr(entity, 'handle_event'):
-                    entity.handle_event(event)
+
+            if isinstance(self.current_screen, Window) and hasattr(self.current_screen, 'handle_event'):
+                # print("Handling event for screen: ", self.current_screen)
+                self.current_screen.handle_event(event)
+
+    def _render_mouse_position(self):
+        mouse_pos = pg.mouse.get_pos()
+        mouse_pos_surface = pg.font.Font(None, 20).render(f"Mouse position: {mouse_pos}", True, (255, 255, 255))
+        self.screen.blit(mouse_pos_surface, (0, 0))
 
     def _render_fps(self):
         current_time = time.time()
@@ -66,6 +77,9 @@ class Game:
 
         if self.count_fps:
             self._render_fps()
+
+        if self.mouse_pos:
+            self._render_mouse_position()
 
 
     async def _main_loop(self, framerate_limit = inf):
