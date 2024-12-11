@@ -1,9 +1,9 @@
 import pygame as pg
 
-from snakeGame.widgets.entity import Entity
+from snakeGame.widgets.widget import Widget
 
 
-class EventHandler(Entity):
+class EventHandler(Widget):
     def __init__(self):
         super().__init__(0, 0, 0, 0)
         self._events = {}

@@ -1,9 +1,9 @@
 import pygame as pg
 
-from snakeGame.widgets.animated_entity import AnimatedEntity
-from snakeGame.widgets.element import Element
+from snakeGame.widgets.widget import Widget
 
-class DVDLike(AnimatedEntity):
+
+class DVDLike(Widget):
     def __init__(self, x=0, y=0, width=50, height=50, speed=10):
         super().__init__(x, y, width, height, speed)
         self.color = (255, 0, 0)
@@ -12,7 +12,7 @@ class DVDLike(AnimatedEntity):
         self.body()
 
     def body(self):
-        body = Element(self.rect.left, self.rect.top, self.rect.width, self.rect.height, self.color)
+        body = Widget(self.rect.left, self.rect.top, self.rect.width, self.rect.height, self.color)
         text = pg.font.Font(None, 30).render("DVD UWU", True, (0, 0, 0))
         body.surface.blit(text, (0, 0))
 

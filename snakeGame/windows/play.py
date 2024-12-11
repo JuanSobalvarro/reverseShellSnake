@@ -23,16 +23,16 @@ class PlayScreen(Window):
         self.event_handler.add_event(pg.KEYUP, lambda event: return_menu() if event.key == pg.K_ESCAPE else None)
 
         print("Loading play screen")
-        self.add_entity(self.grid)
-        self.add_entity(self.score_bar)
-        self.add_entity(self.snake)
+        self.add_widget(self.grid)
+        self.add_widget(self.score_bar)
+        self.add_widget(self.snake)
 
         # self.add_entity(self.event_handler)
 
         # self.add_entity(self.dvd_like)
         # self.add_entity(self.dvd_like2)
-        print("Entities loaded: ", self._entities)
+        print("Entities loaded: ", self._widgets)
 
     def unload(self):
         print("Unloading play screen")
-        self.clear_entities()
+        self.clear_widgets()

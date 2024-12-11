@@ -1,10 +1,10 @@
 import pygame as pg
 import pygame.gfxdraw
 import pygame.event
-from snakeGame.widgets.entity import Entity
+from snakeGame.widgets.widget import Widget
 
-class RoundedButton(Entity):
-    def __init__(self, x, y, width, height, text, font_size, font_color, bg_color, border_color, border_width,
+class RoundedButton(Widget):
+    def __init__(self, screen, x, y, width, height, text, font_size, font_color, bg_color, border_color, border_width,
                  corner_radius=10, on_click: callable = lambda: None):
 
         # Validate corner radius
@@ -16,7 +16,7 @@ class RoundedButton(Entity):
         if border_width > corner_radius:
             raise ValueError(f"Border width ({border_width}) must be <= corner radius ({corner_radius})")
 
-        super().__init__(x, y, width, height)
+        super().__init__(screen, x, y, width, height)
 
         self.text = text
         self.font_size = font_size
@@ -31,48 +31,48 @@ class RoundedButton(Entity):
         self.on_click: callable = on_click
         self.clicked = False
 
-    def draw(self, surface: pg.Surface):
+    def draw(self):
         # need to use anti aliasing circle drawing routines to smooth the corners
-        pygame.gfxdraw.aacircle(surface, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.aacircle(self.screen, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
                                 self.corner_radius, self.border_color)
-        pygame.gfxdraw.aacircle(surface, self.rect.right - self.corner_radius - 1, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.aacircle(self.screen, self.rect.right - self.corner_radius - 1, self.rect.top + self.corner_radius,
                                 self.corner_radius, self.border_color)
-        pygame.gfxdraw.aacircle(surface, self.rect.left + self.corner_radius, self.rect.bottom - self.corner_radius - 1,
+        pygame.gfxdraw.aacircle(self.screen, self.rect.left + self.corner_radius, self.rect.bottom - self.corner_radius - 1,
                                 self.corner_radius,
                                 self.border_color)
-        pygame.gfxdraw.aacircle(surface, self.rect.right - self.corner_radius - 1, self.rect.bottom - self.corner_radius - 1, self.corner_radius,
+        pygame.gfxdraw.aacircle(self.screen, self.rect.right - self.corner_radius - 1, self.rect.bottom - self.corner_radius - 1, self.corner_radius,
                                 self.border_color)
 
         # Outer corner circles
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
                                      self.corner_radius, self.border_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.right - self.corner_radius - 1, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.right - self.corner_radius - 1, self.rect.top + self.corner_radius,
                                      self.corner_radius,
                                      self.border_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius, self.rect.bottom - self.corner_radius - 1,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius, self.rect.bottom - self.corner_radius - 1,
                                      self.corner_radius,
                                      self.border_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.right - self.corner_radius - 1, self.rect.bottom - self.corner_radius - 1,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.right - self.corner_radius - 1, self.rect.bottom - self.corner_radius - 1,
                                      self.corner_radius, self.border_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
                                      self.corner_radius, self.border_color)
 
         # Inner corner circles
         inner_radius = self.corner_radius - self.border_width
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
                                      inner_radius, self.bg_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.right - self.corner_radius - 1,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.right - self.corner_radius - 1,
                                      self.rect.top + self.corner_radius,
                                      inner_radius,
                                      self.bg_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius,
                                      self.rect.bottom - self.corner_radius - 1,
                                      inner_radius,
                                      self.bg_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.right - self.corner_radius - 1,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.right - self.corner_radius - 1,
                                      self.rect.bottom - self.corner_radius - 1,
                                      inner_radius, self.bg_color)
-        pygame.gfxdraw.filled_circle(surface, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
+        pygame.gfxdraw.filled_circle(self.screen, self.rect.left + self.corner_radius, self.rect.top + self.corner_radius,
                                      inner_radius, self.bg_color)
 
         # Outer rects (border rects)
@@ -80,29 +80,30 @@ class RoundedButton(Entity):
 
         rect_tmp.width -= 2 * self.corner_radius
         rect_tmp.center = self.rect.center
-        pygame.draw.rect(surface, self.border_color, rect_tmp)
+        pygame.draw.rect(self.screen, self.border_color, rect_tmp)
 
         rect_tmp.width = self.rect.width
         rect_tmp.height -= 2 * self.corner_radius
         rect_tmp.center = self.rect.center
-        pygame.draw.rect(surface, self.border_color, rect_tmp)
+        pygame.draw.rect(self.screen, self.border_color, rect_tmp)
 
         # Inner rects
         rect_tmp = pygame.Rect(self.rect)
         rect_tmp.width -= 2 * self.corner_radius
         rect_tmp.height -= 2 * self.border_width
         rect_tmp.center = self.rect.center
-        pygame.draw.rect(surface, self.bg_color, rect_tmp)
+        pygame.draw.rect(self.screen, self.bg_color, rect_tmp)
 
         rect_tmp.width = self.rect.width - 2 * self.border_width
         rect_tmp.height -= self.rect.height - 2 * self.corner_radius
         rect_tmp.center = self.rect.center
-        pygame.draw.rect(surface, self.bg_color, rect_tmp)
+        pygame.draw.rect(self.screen, self.bg_color, rect_tmp)
 
         # Render text
         text_surface = self.font.render(self.text, True, self.font_color)
         text_rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
+
+        self.screen.blit(text_surface, text_rect)
 
     def handle_event(self, event: pygame.event.Event):
         if event.type == pg.MOUSEBUTTONDOWN:

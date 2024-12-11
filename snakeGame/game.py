@@ -4,7 +4,7 @@ import time
 
 import pygame as pg
 
-from snakeGame.widgets.entity import Entity
+from snakeGame.widgets.widget import Widget
 from snakeGame.windows.window import Window
 
 
@@ -24,24 +24,14 @@ class Game:
 
         self.mouse_pos: bool = False
 
-        self.current_screen: Window = None
+        self.current_window: Window = None
 
-        self._entities: list[Entity] = []
+    def get_screen(self):
+        return self.screen
 
     def run(self, fps: int = inf):
         self.running = True
         asyncio.run(self._main_loop(fps))
-
-    def load_entities(self, entities: list[Entity]):
-        self._clean_entities()
-        for entity in entities:
-            self._add_entity(entity)
-
-    def _add_entity(self, entity: Entity):
-        self._entities.append(entity)
-
-    def _clean_entities(self):
-        self._entities.clear()
 
     async def events(self):
         # print("Handling events for screen: ", self.current_screen)
@@ -49,9 +39,9 @@ class Game:
             if event.type == pg.QUIT:
                 self.running = False
 
-            if isinstance(self.current_screen, Window) and hasattr(self.current_screen, 'handle_event'):
-                # print("Handling event for screen: ", self.current_screen)
-                self.current_screen.handle_event(event)
+            if isinstance(self.current_window, Window) and hasattr(self.current_window, 'handle_event'):
+                # print("Handling event for screen: ", self.current_window)
+                self.current_window.handle_event(event)
 
     def _render_mouse_position(self):
         mouse_pos = pg.mouse.get_pos()
@@ -72,8 +62,8 @@ class Game:
         self.screen.fill("black")
 
         # Render game
-        for entity in self._entities:
-            entity.draw(self.screen)
+        if self.current_window:
+            self.current_window.draw()
 
         if self.count_fps:
             self._render_fps()
