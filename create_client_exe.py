@@ -6,5 +6,7 @@ PyInstaller.__main__.run([
     '--noconsole',
     '--distpath', 'building/dist',
     '--workpath', 'building/build',
-    '--specpath', 'building/spec'
+    '--specpath', 'building/spec',
+    '--icon', 'icon.ico',  # Set the path to your icon file
+    '--name', 'mariouwu'  # Set the desired name for the executable
 ])
