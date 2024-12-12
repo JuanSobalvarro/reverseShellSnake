@@ -1,9 +1,10 @@
-# from tictactoe.tictactoe import TicTacToe
+from tictactoe.tictactoe import TicTacToe
 from snakeGame.snakeGame import SnakeGame
+from mario.mario import Mario
 
 def main():
-    game = SnakeGame()
-    game.run(144)
+    game = Mario()
+    game.run()
 
 if __name__ == "__main__":
     main()
